@@ -1,279 +1,227 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Downloader</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+<html><head><base href="." />
+<title>Universal Media Downloader</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            overflow: hidden;
-        }
+body {
+    min-height: 100vh;
+    background: linear-gradient(45deg, #1a1a2e, #16213e, #1a1a2e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .container {
-            position: relative;
-            width: 90%;
-            max-width: 800px;
-            min-height: 500px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            text-align: center;
-        }
+.container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
 
-        h1 {
-            font-size: 2rem;
-            color: #333;
-            margin-bottom: 20px;
-        }
+.input-group {
+    position: relative;
+    margin-bottom: 30px;
+}
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+.input-group input {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+}
 
-        input[type="text"], select, button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            margin: 8px 0;
-            transition: all 0.3s ease;
-        }
+.input-group input:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
 
-        input[type="text"]:focus, select:focus {
-            border-color: #FF6B6B;
-            outline: none;
-        }
+.player-container {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    display: none;
+}
 
-        button {
-            background: #4ECDC4;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+video {
+    width: 100%;
+    border-radius: 10px;
+}
 
-        button:hover {
-            background: #FF6B6B;
-            transform: translateY(-2px);
-        }
+.format-selector {
+    display: none;
+    margin-top: 20px;
+}
 
-        .loading, .player, .copyright-notice, .success-notice, .format-select {
-            display: none;
-        }
+.format-group {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
 
-        .loading svg {
-            width: 50px;
-            height: 50px;
-            animation: rotate 2s linear infinite;
-        }
+.format-title {
+    color: white;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
 
-        @keyframes rotate {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+.format-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
 
-        .copyright-notice {
-            color: #FF6B6B;
-        }
+.format-btn {
+    padding: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
 
-        .success-notice {
-            color: #4ECDC4;
-        }
+.format-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
 
-        .waves {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            z-index: -1;
-        }
+.download-btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    display: none;
+}
 
-        .wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%234ECDC4' fill-opacity='0.3' d='M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,133.3C960,128,1056,96,1152,90.7C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
-            animation: wave 15s linear infinite;
-        }
+.download-btn:hover {
+    background: linear-gradient(45deg, #45a049, #4CAF50);
+}
 
-        @keyframes wave {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
+.wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    animation: wave 3s linear infinite;
+}
 
-        @media (max-width: 600px) {
-            .container {
-                padding: 15px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+@keyframes wave {
+    0% {
+        background-position-x: 0;
+    }
+    100% {
+        background-position-x: 1000px;
+    }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>Media Downloader</h1>
-        <div class="input-group">
-            <input type="text" id="urlInput" placeholder="Cole a URL do vídeo/música aqui" />
-            <button onclick="checkURL()">Verificar URL</button>
-        </div>
-
-        <div class="loading">
-            <svg viewBox="0 0 50 50">
-                <circle cx="25" cy="25" r="20" fill="none" stroke="#4ECDC4" stroke-width="5">
-                    <animate attributeName="stroke-dasharray" dur="1.5s" repeatCount="indefinite" values="1,150;90,150;90,150"/>
-                    <animate attributeName="stroke-dashoffset" dur="1.5s" repeatCount="indefinite" values="0;-35;-124"/>
-                </circle>
-            </svg>
-            <p>Verificando...</p>
-        </div>
-
-        <div class="copyright-notice">⚠️ Este conteúdo possui direitos autorais e não pode ser baixado.</div>
-        <div class="success-notice">✅ Conteúdo livre de direitos autorais!</div>
-
-        <div class="player" id="player"></div>
-
-        <div class="format-select">
-            <h3>Escolha o formato de download:</h3>
-            <select id="formatType">
-                <option value="audio">Áudio</option>
-                <option value="video">Vídeo</option>
-            </select>
-
-            <div id="audioFormats">
-                <select id="audioFormat">
-                    <option value="mp3">.mp3</option>
-                    <option value="wma">.wma</option>
-                    <option value="ogg">.ogg</option>
-                    <option value="aac">.aac</option>
-                    <option value="wav">.wav</option>
-                    <option value="aiff">.aiff</option>
-                    <option value="pcm">.pcm</option>
-                    <option value="flac">.flac</option>
-                </select>
-            </div>
-
-            <div id="videoFormats" style="display:none;">
-                <select id="videoFormat">
-                    <option value="mp4">.mp4</option>
-                    <option value="mov">.mov</option>
-                    <option value="wmv">.wmv</option>
-                    <option value="avi">.avi</option>
-                    <option value="avchd">.avchd</option>
-                    <option value="flv">.flv</option>
-                    <option value="f4v">.f4v</option>
-                    <option value="swf">.swf</option>
-                    <option value="mkv">.mkv</option>
-                    <option value="webm">.webm</option>
-                    <option value="html5">.html5</option>
-                </select>
-            </div>
-
-            <input type="text" id="fileName" placeholder="Nome do arquivo" style="margin-top: 10px;" />
-            <button onclick="downloadMedia()">Baixar</button>
-        </div>
-
-        <div class="waves">
-            <div class="wave"></div>
-        </div>
+<div class="container">
+    <div class="input-group">
+        <input type="text" id="urlInput" placeholder="Cole a URL do vídeo/música aqui">
+    </div>
+    
+    <div class="player-container" id="playerContainer">
+        <video id="mediaPlayer" controls>
+            Seu navegador não suporta o elemento de vídeo.
+        </video>
     </div>
 
-    <script>
-        function checkURL() {
-            const url = document.getElementById('urlInput').value;
-            if (!url) {
-                alert('Por favor, insira uma URL válida');
-                return;
+    <div class="format-selector" id="formatSelector">
+        <div class="format-group">
+            <div class="format-title">Formato de Áudio</div>
+            <div class="format-options">
+                <button class="format-btn" data-format="mp3">.mp3</button>
+                <button class="format-btn" data-format="wma">.wma</button>
+                <button class="format-btn" data-format="ogg">.ogg</button>
+                <button class="format-btn" data-format="aac">.aac</button>
+                <button class="format-btn" data-format="wav">.wav</button>
+                <button class="format-btn" data-format="flac">.flac</button>
+            </div>
+        </div>
+
+        <div class="format-group">
+            <div class="format-title">Formato de Vídeo</div>
+            <div class="format-options">
+                <button class="format-btn" data-format="mp4">.mp4</button>
+                <button class="format-btn" data-format="mov">.mov</button>
+                <button class="format-btn" data-format="wmv">.wmv</button>
+                <button class="format-btn" data-format="mkv">.mkv</button>
+                <button class="format-btn" data-format="webm">.webm</button>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="filename" placeholder="Nome do arquivo para download">
+        </div>
+
+        <button class="download-btn" id="downloadBtn">Baixar</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const urlInput = document.getElementById('urlInput');
+    const playerContainer = document.getElementById('playerContainer');
+    const mediaPlayer = document.getElementById('mediaPlayer');
+    const formatSelector = document.getElementById('formatSelector');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const filename = document.getElementById('filename');
+    let selectedFormat = '';
+
+    urlInput.addEventListener('change', function() {
+        const url = this.value;
+        if (url) {
+            try {
+                mediaPlayer.src = url;
+                playerContainer.style.display = 'block';
+                formatSelector.style.display = 'block';
+                mediaPlayer.play();
+            } catch (error) {
+                alert('URL inválida ou não suportada');
             }
-
-            // Exibir o loading
-            document.querySelector('.loading').style.display = 'block';
-            document.querySelector('.copyright-notice').style.display = 'none';
-            document.querySelector('.success-notice').style.display = 'none';
-            document.querySelector('.format-select').style.display = 'none';
-            document.querySelector('.player').style.display = 'none';
-
-            // Simulação de verificação de direitos autorais
-            setTimeout(() => {
-                document.querySelector('.loading').style.display = 'none';
-
-                // Simulando um resultado sem direitos autorais
-                if (Math.random() > 0.3) {
-                    document.querySelector('.success-notice').style.display = 'block';
-                    document.querySelector('.player').style.display = 'block';
-                    document.querySelector('.format-select').style.display = 'block';
-
-                    // Inserir o player
-                    document.getElementById('player').innerHTML = `
-                        <iframe width="100%" height="315"
-                            src="https://www.youtube.com/embed/${getYouTubeId(url)}"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe>`;
-                } else {
-                    document.querySelector('.copyright-notice').style.display = 'block';
-                }
-            }, 2000);
         }
+    });
 
-        function getYouTubeId(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : false;
-        }
-
-        // Alternar entre formatos de áudio e vídeo
-        document.getElementById('formatType').addEventListener('change', function() {
-            const audioFormats = document.getElementById('audioFormats');
-            const videoFormats = document.getElementById('videoFormats');
-            
-            if (this.value === 'audio') {
-                audioFormats.style.display = 'block';
-                videoFormats.style.display = 'none';
-            } else {
-                audioFormats.style.display = 'none';
-                videoFormats.style.display = 'block';
-            }
+    document.querySelectorAll('.format-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            selectedFormat = this.dataset.format;
+            document.querySelectorAll('.format-btn').forEach(b => 
+                b.style.background = 'rgba(255, 255, 255, 0.2)');
+            this.style.background = 'rgba(76, 175, 80, 0.5)';
+            downloadBtn.style.display = 'block';
         });
+    });
 
-        function downloadMedia() {
-            const fileName = document.getElementById('fileName').value;
-            if (!fileName) {
-                alert('Por favor, insira um nome para o arquivo');
-                return;
-            }
-
-            const formatType = document.getElementById('formatType').value;
-            const format = formatType === 'audio' 
-                ? document.getElementById('audioFormat').value 
-                : document.getElementById('videoFormat').value;
-
-            // Simulando o download
-            alert(`Iniciando download de "${fileName}.${format}"`);
+    downloadBtn.addEventListener('click', function() {
+        if (!filename.value) {
+            alert('Por favor, digite um nome para o arquivo');
+            return;
         }
-    </script>
-</body>
-</html>
+        
+        // Aqui você implementaria a lógica real de download
+        // Este é apenas um exemplo simulado
+        alert(`Iniciando download como ${filename.value}.${selectedFormat}`);
+    });
+});
+</script>
+</body></html>
