@@ -1,0 +1,194 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Vídeos</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .login-container, .gallery-container, .video-player-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .login-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .login-form input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .gallery img {
+            width: 300px;
+            height: 600px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .video-player {
+            position: relative;
+            width: 300px;
+            height: 600px;
+        }
+        .video-player video {
+            width: 100%;
+            height: 100%;
+        }
+        .video-player-controls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+        .video-player-controls button {
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: rgba(0,0,0,0.6);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .video-player-controls button:hover {
+            background-color: rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <form class="login-form" id="loginForm">
+        <input type="email" placeholder="Email" id="email" required>
+        <input type="password" placeholder="Senha" id="password" required>
+        <button type="submit">Login</button>
+    </form>
+</div>
+
+<div class="gallery-container" style="display: none;">
+    <div class="gallery" id="gallery">
+        <!-- Dynamic Images will be added here -->
+    </div>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="video-player-container" style="display: none;">
+    <div class="video-player">
+        <video id="videoPlayer" controls>
+            <source src="" type="video/mp4">
+        </video>
+        <div class="video-player-controls">
+            <button onclick="playVideo()">Play</button>
+            <button onclick="pauseVideo()">Pause</button>
+            <button onclick="backToGallery()">Back Menu</button>
+            <button onclick="closePage()">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const validEmails = ["harahelguilherme@gmail.com", "programadorjunior25@gmail.com"];
+    const validPasswords = ["1°@HAra133496*", "2°@HAra25082003*", "3°@Oshinoko2024*", "4°@ReZero2016*"];
+
+    const videos = [
+        { name: "Video 1", source: "videos/video1.mp4" },
+        { name: "Video 2", source: "videos/video2.mp4" },
+        { name: "Video 3", source: "videos/video3.mp4" }
+    ];
+
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        if(validEmails.includes(email) && validPasswords.includes(password)) {
+            document.querySelector('.login-container').style.display = 'none';
+            document.querySelector('.gallery-container').style.display = 'flex';
+            loadGallery();
+        } else {
+            alert('Usuário ou senha inválidos!');
+        }
+    });
+
+    function loadGallery() {
+        const gallery = document.getElementById('gallery');
+        videos.forEach(video => {
+            const img = document.createElement('img');
+            img.src = `https://via.placeholder.com/300x600.png?text=${encodeURIComponent(video.name)}`;
+            img.alt = video.name;
+            img.setAttribute('data-video', video.source);
+            img.addEventListener('click', function() {
+                playSelectedVideo(video.source);
+            });
+            gallery.appendChild(img);
+        });
+    }
+
+    function playSelectedVideo(src) {
+        const videoPlayer = document.getElementById('videoPlayer');
+        videoPlayer.src = src;
+        document.querySelector('.gallery-container').style.display = 'none';
+        document.querySelector('.video-player-container').style.display = 'flex';
+    }
+
+    function playVideo() {
+        document.getElementById('videoPlayer').play();
+    }
+
+    function pauseVideo() {
+        document.getElementById('videoPlayer').pause();
+    }
+
+    function backToGallery() {
+        document.getElementById('videoPlayer').pause();
+        document.querySelector('.video-player-container').style.display = 'none';
+        document.querySelector('.gallery-container').style.display = 'flex';
+    }
+
+    function closePage() {
+        window.close();
+    }
+
+    function logout() {
+        document.querySelector('.gallery-container').style.display = 'none';
+        document.querySelector('.login-container').style.display = 'flex';
+        document.querySelector('.video-player-container').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
