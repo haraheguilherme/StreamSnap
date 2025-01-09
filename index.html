@@ -46,19 +46,23 @@
         }
         .gallery {
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
+            flex-direction: column; /* Organiza as imagens em uma coluna */
+            gap: 20px; /* Espaço entre as imagens */
             justify-content: center;
+            align-items: center;
         }
+
         .gallery img {
-            width: 600px;
-            height: 300px;
+            width: 300px;
+            height: 600px;
             cursor: pointer;
             transition: transform 0.3s;
         }
+
         .gallery img:hover {
             transform: scale(1.05);
         }
+
         .video-player {
             position: relative;
             width: 300px;
@@ -145,21 +149,23 @@
     ];
 
     document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        
-        if(validEmails.includes(email) && validPasswords.includes(password)) {
-            document.querySelector('.login-container').style.display = 'none';
-            document.querySelector('.gallery-container').style.display = 'flex';
-            loadGallery();
-        } else {
-            alert('Usuário ou senha inválidos!');
-        }
-    });
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    if(validEmails.includes(email) && validPasswords.includes(password)) {
+        document.querySelector('.login-container').style.display = 'none';
+        document.querySelector('.gallery-container').style.display = 'flex';
+        loadGallery();
+    } else {
+        alert('Usuário ou senha inválidos!');
+    }
+});
 
     function loadGallery() {
         const gallery = document.getElementById('gallery');
+        gallery.innerHTML = ''; // Limpa a galeria antes de adicionar as imagens
+
         videos.forEach(video => {
             const img = document.createElement('img');
             img.src = `https://via.placeholder.com/300x600.png?text=${encodeURIComponent(video.name)}`;
