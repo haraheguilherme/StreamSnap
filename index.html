@@ -147,7 +147,6 @@
         { name: "Poppy PlayTime 2", source: "videos/Poppy PlayTime 2.mp4" },
         { name: "Poppy PlayTime 3", source: "videos/Poppy PlayTime 3.mp4" }
     ];
-
     document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
     const email = document.getElementById('email').value;
@@ -168,7 +167,7 @@
 
         videos.forEach(video => {
             const img = document.createElement('img');
-            img.src = `https://via.placeholder.com/300x600.png?text=${encodeURIComponent(video.name)}`;
+            img.src = `https://via.placeholder.com/600x300.png?text=${encodeURIComponent(video.name)}`;
             img.alt = video.name;
             img.setAttribute('data-video', video.source);
             img.addEventListener('click', function() {
@@ -186,8 +185,35 @@
     }
 
     function playVideo() {
-        document.getElementById('videoPlayer').play();
+        const videoPlayer = document.getElementById('videoPlayer');
+        videoPlayer.play();
+
+        // Coloca o vídeo em tela cheia
+        if (videoPlayer.requestFullscreen) {
+            videoPlayer.requestFullscreen();
+        } else if (videoPlayer.mozRequestFullScreen) { // Firefox
+            videoPlayer.mozRequestFullScreen();
+        } else if (videoPlayer.webkitRequestFullscreen) { // Chrome, Safari e Opera
+            videoPlayer.webkitRequestFullscreen();
+        } else if (videoPlayer.msRequestFullscreen) { // Internet Explorer/Edge
+            videoPlayer.msRequestFullscreen();
+        }
     }
+
+    // Ao terminar o vídeo, sair da tela cheia
+    document.getElementById('videoPlayer').addEventListener('ended', function() {
+        if (document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari e Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // Internet Explorer/Edge
+                document.msExitFullscreen();
+            }
+        }
+    });
 
     function pauseVideo() {
         document.getElementById('videoPlayer').pause();
@@ -208,6 +234,7 @@
         document.querySelector('.login-container').style.display = 'flex';
         document.querySelector('.video-player-container').style.display = 'none';
     }
+
 </script>
 
 </body>
