@@ -5,105 +5,98 @@
     <title>Plataforma de Vídeos</title>
     <style>
         body, html {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-        }
-        .login-container, .gallery-container, .video-player-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        .login-form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .login-form input {
-            width: 100%;
-            margin-bottom: 10px;
-            padding: 8px;
-            font-size: 18px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .login-form button {
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .login-form button:hover {
-            background-color: #0056b3;
-        }
-        .gallery {
-            display: flex;
-            flex-direction: column; /* Organiza as imagens em uma coluna */
-            gap: 20px; /* Espaço entre as imagens */
-            justify-content: center;
-            align-items: center;
-        }
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
 
-        .gallery img {
-            width: 300px;
-            height: 600px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
+    .login-container, .gallery-container, .video-player-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+    }
 
-        .gallery img:hover {
-            transform: scale(1.05);
-        }
+    .login-form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .video-player {
-            position: relative;
-            width: 300px;
-            height: 600px;
-        }
-        .video-player {
-            position: relative;
-            width: 300px;
-            height: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .login-form input {
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 8px;
+        font-size: 18px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        .video-player video {
-            width: 100%;
-            height: 100%;
-            margin-bottom: 20px; /* Adiciona um espaço de 20px entre o vídeo e os botões */
-        }
+    .login-form button {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
 
-        .video-player-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            padding: 10px 0; /* Padding adicional para garantir que os botões não fiquem tão apertados */
-            background-color: rgba(0,0,0,0.6);
-            width: 100%;
-        }
+    .login-form button:hover {
+        background-color: #0056b3;
+    }
 
-        .video-player-controls button {
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: rgba(0,0,0,0.8);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
+    .gallery {
+        display: flex;
+        flex-direction: column; /* Organiza as imagens em uma coluna */
+        gap: 20px; /* Espaço entre as imagens */
+        justify-content: center;
+        align-items: center;
+    }
 
-        .video-player-controls button:hover {
-            background-color: rgba(0,0,0,1);
-        }
+    .gallery img {
+        width: 600px; /* Tamanho fixo de 600px de largura */
+        height: 300px; /* Tamanho fixo de 300px de altura */
+        cursor: pointer;
+        /* Remover a animação de transformação */
+    }
+
+    .video-player {
+        position: relative;
+        width: 600px; /* Tamanho fixo de 600px de largura */
+        height: 300px; /* Tamanho fixo de 300px de altura */
+    }
+
+    .video-player video {
+        width: 100%;
+        height: 100%;
+    }
+
+    .video-player-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        padding: 10px 0; /* Padding adicional para garantir que os botões não fiquem tão apertados */
+        background-color: rgba(0,0,0,0.6);
+        width: 100%;
+    }
+
+    .video-player-controls button {
+        padding: 5px 10px;
+        font-size: 14px;
+        background-color: rgba(0,0,0,0.8);
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .video-player-controls button:hover {
+        background-color: rgba(0,0,0,1);
+    }
 
     </style>
 </head>
