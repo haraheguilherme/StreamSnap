@@ -179,7 +179,7 @@
 
     function playSelectedVideo(src) {
         const videoPlayer = document.getElementById('videoPlayer');
-        videoPlayer.src = src;
+        videoPlayer.src = src; // Defina a URL do vídeo hospedado no Google Drive
         document.querySelector('.gallery-container').style.display = 'none';
         document.querySelector('.video-player-container').style.display = 'flex';
     }
